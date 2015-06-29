@@ -16,7 +16,7 @@ import org.apache.mesos.Protos.ContainerInfo.DockerInfo.PortMapping;
 import org.apache.mesos.Scheduler;
 import org.apache.mesos.SchedulerDriver;
 
-import org.apache.mesos.logstash.common.LogstashProtos;
+//import org.apache.mesos.logstash.common.LogstashProtos;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -211,39 +211,40 @@ public class LogstashScheduler implements Scheduler, Runnable {
 
     @Override
     public void frameworkMessage(SchedulerDriver schedulerDriver, Protos.ExecutorID executorID, Protos.SlaveID slaveID, byte[] bytes) {
-        LOGGER.info("Message received");
-
-        try {
-            LogstashProtos.ExecutorMessage executorMessage  = LogstashProtos.ExecutorMessage.parseFrom(bytes);
-            List<String> frameworkNames = executorMessage.getFrameworkNameList();
-
-            for(String frameworkName : frameworkNames) {
-                LOGGER.info(String.format("Framework name: %s", frameworkName));
-            }
-
-            byte[] message = createExecutorMessage(frameworkNames);
-
-            schedulerDriver.sendFrameworkMessage(executorID, slaveID, message);
-
-        } catch (InvalidProtocolBufferException e) {
-            e.printStackTrace();
-        }
+//        LOGGER.info("Message received");
+//
+//        try {
+//            LogstashProtos.ExecutorMessage executorMessage  = LogstashProtos.ExecutorMessage.parseFrom(bytes);
+//            List<String> frameworkNames = executorMessage.getFrameworkNameList();
+//
+//            for(String frameworkName : frameworkNames) {
+//                LOGGER.info(String.format("Framework name: %s", frameworkName));
+//            }
+//
+//            byte[] message = createExecutorMessage(frameworkNames);
+//
+//            schedulerDriver.sendFrameworkMessage(executorID, slaveID, message);
+//
+//        } catch (InvalidProtocolBufferException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private byte[] createExecutorMessage(List<String> frameworkNames) {
 
-        List<LogstashProtos.LogstashConfig> logstashConfigs = new ArrayList<>();
-
-        for(String frameworkName : frameworkNames) {
-            logstashConfigs.add(LogstashProtos.LogstashConfig.newBuilder()
-                .addLogLocation("/var/log/apt/history.log")
-                .setFrameworkName(frameworkName).build());
-        }
-
-        return LogstashProtos.SchedulerMessage.newBuilder()
-                .setConfigurationFragments("{{}}")
-                .addAllLogstashConfig(logstashConfigs)
-                .build().toByteArray();
+//        List<LogstashProtos.LogstashConfig> logstashConfigs = new ArrayList<>();
+//
+//        for(String frameworkName : frameworkNames) {
+//            logstashConfigs.add(LogstashProtos.LogstashConfig.newBuilder()
+//                .addLogLocation("/var/log/apt/history.log")
+//                .setFrameworkName(frameworkName).build());
+//        }
+//
+//        return LogstashProtos.SchedulerMessage.newBuilder()
+//                .setConfigurationFragments("{{}}")
+//                .addAllLogstashConfig(logstashConfigs)
+//                .build().toByteArray();
+        return null;
     }
 
     @Override

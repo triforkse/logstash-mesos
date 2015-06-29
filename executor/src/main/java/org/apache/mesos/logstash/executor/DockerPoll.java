@@ -20,7 +20,7 @@ public class DockerPoll {
 
     public DockerPoll(DockerInfo dockerInfo, long pollInterval) {
         this.dockerInfo = dockerInfo;
-        startPoll(pollInterval);
+        //startPoll(pollInterval);
     }
 
     public void attach(FrameworkListener observer) {
@@ -28,15 +28,15 @@ public class DockerPoll {
         notifyForEachNewContainer(observer, this.runningContainers);
     }
 
-    private void startPoll(long pollInterval) {
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                updateContainerState(dockerInfo.getContainersThatWantLogging());
-            }
-        }, 0, pollInterval);
-    }
+//    private void startPoll(long pollInterval) {
+//        Timer timer = new Timer();
+//        timer.scheduleAtFixedRate(new TimerTask() {
+//            @Override
+//            //public void run() {
+//                updateContainerState(dockerInfo.getContainersThatWantLogging());
+//            }
+//        }, 0, pollInterval);
+//    }
 
     private void updateContainerState(Map<String, LogstashInfo> newContainerState) {
         notifyNewContainerState(newContainerState, runningContainers);
