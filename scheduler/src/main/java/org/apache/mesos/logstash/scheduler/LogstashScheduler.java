@@ -285,8 +285,8 @@ public class LogstashScheduler implements Scheduler, Runnable {
                 .addAllResources(offer.getResourcesList());
 
         Protos.ContainerInfo.DockerInfo.Builder dockerExecutor = Protos.ContainerInfo.DockerInfo.newBuilder()
-                .setForcePullImage(true)
-                .setImage("swemail/logstash-executor");
+                .setForcePullImage(false)
+                .setImage("logstash-executor");
 
 
         LOGGER.info("Using Executor to start Logstash cloud mesos on slaves");
@@ -294,7 +294,14 @@ public class LogstashScheduler implements Scheduler, Runnable {
         Protos.ExecutorInfo executorInfo = Protos.ExecutorInfo.newBuilder()
                 .setExecutorId(Protos.ExecutorID.newBuilder().setValue(UUID.randomUUID().toString()))
                 .setFrameworkId(frameworkId)
-                .setContainer(Protos.ContainerInfo.newBuilder().setType(Protos.ContainerInfo.Type.DOCKER).setDocker(dockerExecutor.build()))
+                .setContainer(
+                        Protos.ContainerInfo.newBuilder()
+                                .setType(Protos.ContainerInfo.Type.DOCKER)
+                                .setDocker(dockerExecutor.build())
+                                .addVolumes(Protos.Volume.newBuilder()
+                                        .setContainerPath("/usr/lib") // TODO fix usr local lib
+                                        .setHostPath("/usr/lib")
+                                        .setMode(Protos.Volume.Mode.RO).build()))
                 .setName("" + UUID.randomUUID())
                 .setCommand(Protos.CommandInfo.newBuilder()
                         .addArguments("java")

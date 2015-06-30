@@ -16,7 +16,6 @@ dependencies {
 
     compile project(':scheduler')
     compile project(':executor')
-    compile project(':local')
 
     testCompile 'junit:junit:4.11'
     testCompile 'com.github.docker-java:docker-java:1.3.0'
@@ -28,24 +27,9 @@ dependencies {
 //
 //  Configuration
 //
-task copyDockerComposeConfig(type: Copy) {
-    from 'src/templates'
-    into "${project.buildDir}/resources/test/mesos-ls/"
-
-    include 'docker-compose.yml.template'
-
-    rename { file -> 'docker-compose.yml' }
-
-    expand(scheduler: project(':local').schedulerImageName)
-}
-
-task copyMesosSlaveConfig(type: Copy) {
+task configure(type: Copy) {
     from "${project.projectDir}/src/test/resources/mesos-ls/"
     into "${project.buildDir}/resources/test/mesos-ls/"
-}
-
-task configure {
-    dependsOn copyMesosSlaveConfig, copyDockerComposeConfig
 }
 
 
@@ -74,7 +58,6 @@ containers.each { container ->
 }
 
 // slave needs executor image to run
-dockerComposeUpSlave1.dependsOn project(':executor').pushDockerImage
 dockerComposeUpSlave1.dependsOn dockerComposeStopSlave1
 
 // scheduler image needs scheduler image to run (doesn't need to be pushed though)
@@ -113,7 +96,6 @@ task rmFramework(type: Exec) {
 
 task redeploy(type: Exec) {
     dependsOn rmFramework, configure
-    dependsOn project(':executor').pushDockerImage
     dependsOn project(':scheduler').buildDockerImage
 
     mustRunAfter clusterUp // IMPORTANT!

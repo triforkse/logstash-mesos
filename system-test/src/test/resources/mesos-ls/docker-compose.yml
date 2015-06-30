@@ -23,7 +23,7 @@ slave1:
 
 
 scheduler:
-  image: ${scheduler.replace("docker.io/", "")}
+  image: "logstash-scheduler"
   command: "-f /tmp/conf.conf -m mesosmaster"
   links:
    - mesosmaster

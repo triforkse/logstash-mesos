@@ -7,8 +7,6 @@ mainClassName = "org.apache.mesos.logstash.executor.LogstashExecutor"
 sourceCompatibility = 1.7
 version = '1.0'
 
-evaluationDependsOn(':local')
-
 buildscript {
     repositories { jcenter { url "http://jcenter.bintray.com/" } }
     dependencies {
@@ -29,7 +27,6 @@ repositories {
 
 dependencies {
 
-    compile project(':local')
     compile project(':common')
 
     compile 'org.apache.mesos:mesos:0.22.1'
@@ -77,17 +74,8 @@ task buildDockerImage(type: Exec) {
     executable "docker"
     args "build"
     args "-t"
-    args project(':local').executorImageName
+    args "logstash-executor"
     args "."
 }
 
-task pushDockerImage(type: Exec) {
-    dependsOn buildDockerImage
-
-    executable "docker"
-    args "push"
-    args project(':local').executorImageName
-}
-
 build.dependsOn copyJar
-build.dependsOn pushDockerImage
